@@ -4,7 +4,65 @@ from typing import List
 class Solution:
 
     def updateMatrix(self, matrix: List[List[int]]) -> List[List[int]]:
+        """
+        由于每个节点之间距离都是1，所以离某一个1最近的0一定是直上直下的
+        所以暴力四重奏
+        :param matrix:
+        :return:
+        """
+        ans = []
+        for i in range(len(matrix)):
+            temp = []
+            for j in range(len(matrix[i])):
+                if matrix[i][j] == 0:
+                    temp.append(0)
+                else:
+                    temp.append(999999)
+            ans.append(temp)
 
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                if matrix[i][j] == 1:
+                    if i > 0:
+                        ans[i][j] = min(ans[i - 1][j] + 1, ans[i][j])
+                    if j > 0:
+                        ans[i][j] = min(ans[i][j - 1] + 1, ans[i][j])
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i]) - 1, -1, -1):
+                if matrix[i][j] == 1:
+                    if i > 0:
+                        ans[i][j] = min(ans[i - 1][j] + 1, ans[i][j])
+                    if j < len(matrix[i]) - 1:
+                        ans[i][j] = min(ans[i][j + 1] + 1, ans[i][j])
+
+        for i in range(len(matrix) - 1, -1, -1):
+            for j in range(len(matrix[i])):
+                if matrix[i][j] == 1:
+                    if i < len(matrix) - 1:
+                        ans[i][j] = min(ans[i + 1][j] + 1, ans[i][j])
+                    if j > 0:
+                        ans[i][j] = min(ans[i][j - 1] + 1, ans[i][j])
+
+        for i in range(len(matrix) - 1, -1, -1):
+            for j in range(len(matrix[i]) - 1, -1, -1):
+                if matrix[i][j] == 1:
+                    if i < len(matrix) - 1:
+                        ans[i][j] = min(ans[i + 1][j] + 1, ans[i][j])
+                    if j < len(matrix[i]) - 1:
+                        ans[i][j] = min(ans[i][j + 1] + 1, ans[i][j])
+
+        return ans
+
+
+
+
+    def updateMatrix1(self, matrix: List[List[int]]) -> List[List[int]]:
+        """
+        暴力方法 超时  可以优化  
+        :param matrix:
+        :return:
+        """
         ans = []
         zeros = []
         for i in range(len(matrix)):
@@ -15,6 +73,7 @@ class Solution:
                     zeros.append((i,j))
                 else:
                     temp.append(999999)
+            ans.append(temp)
 
         for x, y in zeros:
             cur = [(x, y)]
@@ -44,24 +103,5 @@ class Solution:
 
         return ans
 
-        # ans = []
-        # ones = []
-        # for i in range(len(matrix)):
-        #     temp = []
-        #     for j in range(len(matrix[i])):
-        #         if matrix[i][j] == 1:
-        #             temp.append(99999)
-        #             ones.append((i, j))
-        #         else:
-        #             temp.append(0)
-        #
-        #     ans.append(temp)
-        #
-        # for x,y in ones:
-        #     result  = 99999
-        #     cur = [(x,y)]
-        #     next = []
-        #     while cur:
-        #         for child_x, child_y in cur:
 
 
