@@ -6,12 +6,14 @@ import heapq
 
 class Solution:
     def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        if not lists:
+            return None
 
         def push(val, node):
             heap.append((val, node))
             pos = len(heap) - 1
 
-            while pos >= 0:
+            while pos > 0:
                 father = (pos - 1) >> 1
                 parent_val, parent_node = heap[father]
                 if parent_val > val:
@@ -50,16 +52,17 @@ class Solution:
         heap = []
 
         for node in lists:
-            heapq.heappush(heap, (node.val, node))
+            if node:
+                push(node.val, node)
 
         head = ListNode()
         temp = head
 
 
         while heap:
-            val, node = heapq.heappop(heap)
+            val, node = pop()
             if node.next:
-                heapq.heappush(heap, (node.next.val, node.next))
+                push(node.next.val, node.next)
             temp.next = node
             temp = temp.next
         return head.next
