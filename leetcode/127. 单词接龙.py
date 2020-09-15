@@ -1,9 +1,74 @@
 from typing import List
 import heapq
+import copy
 
 
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        has_end = False
+        for i in range(len(wordList)):
+            if endWord == wordList[i]:
+                has_end = True
+                break
+
+        if not has_end:
+            return 0
+
+        wordList.append(beginWord)
+
+        edge = {}
+        for i in range(len(wordList)):
+            word = wordList[i]
+            point = []
+            for j in range(len(word)):
+                l = list(word)
+                l[j] = '*'
+                point_word = ''.join(l)
+                # print(point_word)
+
+                point.append(point_word)
+                point_list = edge.get(point_word, [])
+                point_list.append(word)
+                edge[point_word] = point_list
+            edge[word] = point
+
+        current = [beginWord]
+        find = set()
+        find.add(beginWord)
+        step = 0
+        while current:
+            next = []
+            for node in current:
+                # print(node, node in find)
+                point_list = edge.get(node, [])
+                for point in point_list:
+                    if point not in find:
+                        # print(point)
+                        next.append(point)
+                        find.add(point)
+                        if point == endWord:
+                            break
+                if endWord in find:
+                    break
+            if endWord in find:
+                break
+            step += 1
+            current = next
+
+        if endWord not in find:
+            return 0
+        else:
+            return (step + 3) // 2
+
+
+
+
+
+
+
+
+
+    def _ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         def connect(a, b):
             same = 0
             for i in range(len(a)):
