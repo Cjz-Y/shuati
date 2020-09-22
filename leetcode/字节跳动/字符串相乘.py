@@ -5,8 +5,24 @@ class Solution:
         n2 = len(num2)
 
         for ii in range(n1 - 1, -1 , -1):
-            i = 
+            i = n1 - ii
             for jj in range(n2 - 1, -1, -1):
-                target = i + j
-                result[target] += num1
+                j = n2 - jj
+
+                target = i + j - 1
+                result[target] += int(num1[ii]) * int(num2[jj])
+
                 result[target + 1] += int(result[target] / 10)
+                result[target] = result[target] % 10
+
+        ans = ''
+        for i in range(len(result) - 1, 0, -1):
+            if ans != '':
+                ans += str(result[i])
+            elif result[i] != 0 or i == 1:
+                ans += str(result[i])
+
+        return ans
+
+        return ''.join(list(reversed(result)))
+
